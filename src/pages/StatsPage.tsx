@@ -1,0 +1,11 @@
+import { Goal, HandHelping, Medal } from 'lucide-react'
+import { useState } from 'react'
+import { useAppData } from '../contexts/AppDataContext'
+
+export function StatsPage() {
+  const [metric, setMetric] = useState<'goals' | 'assists'>('goals')
+  const { data } = useAppData(); if (!data) return null
+  const sorted = [...data.stats].sort((a, b) => b[metric] - a[metric])
+  const leader = sorted[0]
+  return <div className="page-container"><section className="page-title"><span className="eyebrow">DESEMPENHO INDIVIDUAL</span><h1>Estatísticas</h1><p>Artilharia, assistências e participação dos atletas.</p></section><div className="stat-highlight-grid"><article><Goal size={22} /><span><small>MAIS GOLS</small><strong>@{[...data.stats].sort((a,b) => b.goals-a.goals)[0]?.nickname ?? '—'}</strong><p>{Math.max(0, ...data.stats.map((item) => item.goals))} gols</p></span></article><article><HandHelping size={22} /><span><small>MAIS ASSISTÊNCIAS</small><strong>@{[...data.stats].sort((a,b) => b.assists-a.assists)[0]?.nickname ?? '—'}</strong><p>{Math.max(0, ...data.stats.map((item) => item.assists))} assistências</p></span></article><article><Medal size={22} /><span><small>PARTICIPAÇÕES</small><strong>{leader ? leader.goals + leader.assists : 0}</strong><p>gols + assistências</p></span></article></div><section className="panel stats-board"><div className="panel-head"><div><span className="eyebrow">RANKING DE JOGADORES</span><h2>{metric === 'goals' ? 'Artilharia' : 'Assistências'}</h2></div><div className="filter-tabs"><button className={metric === 'goals' ? 'active' : ''} onClick={() => setMetric('goals')}>Gols</button><button className={metric === 'assists' ? 'active' : ''} onClick={() => setMetric('assists')}>Assistências</button></div></div><div className="leaderboard">{sorted.map((player, index) => <article key={player.playerId} className={index === 0 ? 'leaderboard__row leader' : 'leaderboard__row'}><b>{index + 1}</b><span className="player-avatar">{player.nickname.slice(0,2).toUpperCase()}</span><div><strong>@{player.nickname}</strong><small><i style={{ background: player.teamColor }} /> {player.teamName}</small></div><span><strong>{player[metric]}</strong><small>{metric === 'goals' ? 'gols' : 'assist.'}</small></span><span><strong>{player.matches}</strong><small>jogos</small></span></article>)}</div></section></div>
+}
