@@ -34,12 +34,43 @@ export const demoData: AppData = {
     { id: 'g3', sport: 'Basquete', startsAt: '2026-10-27T15:00:00', venue: 'Quadra B', status: 'scheduled', homeTeam: '3º B', awayTeam: '2º C', homeColor: '#b96fe0', awayColor: '#ee5a4e', homeScore: null, awayScore: null },
   ],
   invitations: [],
+  bracket: [
+    { id: 'b1', stage: 'round-of-16', order: 1, homeTeam: 'Terceirão Azul', awayTeam: 'Águias', homeColor: '#4e8cd8', awayColor: '#d9dfe5', firstLegHome: 2, firstLegAway: 0, secondLegHome: 1, secondLegAway: 1, winner: 'Terceirão Azul' },
+    { id: 'b2', stage: 'round-of-16', order: 2, homeTeam: 'Falcões', awayTeam: 'Lobos', homeColor: '#ee5a4e', awayColor: '#5fc28b', firstLegHome: 1, firstLegAway: 0, secondLegHome: 2, secondLegAway: 2, winner: 'Falcões' },
+    { id: 'b3', stage: 'round-of-16', order: 3, homeTeam: 'Trovões', awayTeam: 'Titãs', homeColor: '#f3c84b', awayColor: '#808bf0', firstLegHome: 3, firstLegAway: 1, secondLegHome: 0, secondLegAway: 0, winner: 'Trovões' },
+    { id: 'b4', stage: 'round-of-16', order: 4, homeTeam: 'Panteras', awayTeam: 'Leões', homeColor: '#b96fe0', awayColor: '#dc873d', firstLegHome: 1, firstLegAway: 1, secondLegHome: 2, secondLegAway: 0, winner: 'Panteras' },
+    { id: 'b5', stage: 'quarterfinal', order: 1, homeTeam: 'Terceirão Azul', awayTeam: 'Falcões', homeColor: '#4e8cd8', awayColor: '#ee5a4e', firstLegHome: 2, firstLegAway: 1, secondLegHome: null, secondLegAway: null, winner: null },
+    { id: 'b6', stage: 'quarterfinal', order: 2, homeTeam: 'Trovões', awayTeam: 'Panteras', homeColor: '#f3c84b', awayColor: '#b96fe0', firstLegHome: 0, firstLegAway: 0, secondLegHome: null, secondLegAway: null, winner: null },
+    { id: 'b7', stage: 'semifinal', order: 1, homeTeam: 'A definir', awayTeam: 'A definir', homeColor: '#53625c', awayColor: '#53625c', firstLegHome: null, firstLegAway: null, secondLegHome: null, secondLegAway: null, winner: null },
+    { id: 'b8', stage: 'final', order: 1, homeTeam: 'A definir', awayTeam: 'A definir', homeColor: '#53625c', awayColor: '#53625c', firstLegHome: null, firstLegAway: null, secondLegHome: null, secondLegAway: null, winner: null },
+  ],
+  tasks: [
+    { id: 'task1', title: 'Conferir redes e traves', category: 'estrutura', dueTime: '13:30', done: true },
+    { id: 'task2', title: 'Confirmar árbitro da rodada', category: 'arbitragem', dueTime: '13:45', done: true },
+    { id: 'task3', title: 'Separar kit de primeiros socorros', category: 'saúde', dueTime: '14:00', done: false },
+    { id: 'task4', title: 'Publicar resultado do jogo 12', category: 'comunicação', dueTime: '14:50', done: false },
+  ],
+  announcements: [
+    { id: 'a1', title: 'Horário alterado', message: 'A partida 2º A × 1º C começa às 14:20 na Quadra A.', priority: 'important', createdAt: new Date().toISOString() },
+    { id: 'a2', title: 'Acesso ao ginásio', message: 'Atletas devem apresentar a credencial na entrada lateral.', priority: 'normal', createdAt: new Date(Date.now() - 3600000).toISOString() },
+  ],
+  incidents: [],
 }
 
 export function loadDemoData(): AppData {
   const stored = localStorage.getItem('arena-demo-data')
   if (!stored) return structuredClone(demoData)
-  try { return JSON.parse(stored) as AppData } catch { return structuredClone(demoData) }
+  try {
+    const parsed = JSON.parse(stored) as Partial<AppData>
+    return {
+      ...structuredClone(demoData),
+      ...parsed,
+      bracket: parsed.bracket ?? structuredClone(demoData.bracket),
+      tasks: parsed.tasks ?? structuredClone(demoData.tasks),
+      announcements: parsed.announcements ?? structuredClone(demoData.announcements),
+      incidents: parsed.incidents ?? structuredClone(demoData.incidents),
+    }
+  } catch { return structuredClone(demoData) }
 }
 
 export function saveDemoData(data: AppData) {

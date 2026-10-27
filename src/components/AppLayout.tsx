@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from 'react'
-import { Bell, CalendarDays, ChartNoAxesColumnIncreasing, CircleHelp, LayoutDashboard, LogOut, Medal, Menu, Settings, Shield, Users, X } from 'lucide-react'
+import { Bell, CalendarDays, ChartNoAxesColumnIncreasing, CircleHelp, GitBranch, LayoutDashboard, LogOut, Medal, Menu, Radio, Settings, Shield, Users, X } from 'lucide-react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { useAppData } from '../contexts/AppDataContext'
@@ -9,8 +9,10 @@ const nav = [
   { to: '/', label: 'Visão geral', icon: LayoutDashboard },
   { to: '/meu-time', label: 'Meu time', icon: Shield },
   { to: '/classificacao', label: 'Classificação', icon: Medal },
+  { to: '/chaveamento', label: 'Chaveamento', icon: GitBranch },
   { to: '/estatisticas', label: 'Estatísticas', icon: ChartNoAxesColumnIncreasing },
   { to: '/jogos', label: 'Jogos', icon: CalendarDays },
+  { to: '/evento', label: 'Central do evento', icon: Radio },
 ]
 
 export function AppLayout({ children }: { children: ReactNode }) {

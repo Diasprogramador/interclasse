@@ -19,6 +19,9 @@ type AppDataContextValue = {
   respondInvitation: (invitationId: string, accept: boolean) => Promise<MutationResult>
   removeMember: (memberId: string) => Promise<MutationResult>
   updatePreferences: (input: { theme?: Theme; notificationsEnabled?: boolean }) => Promise<MutationResult>
+  toggleTask: (taskId: string) => Promise<MutationResult>
+  createAnnouncement: (input: { title: string; message: string; priority: 'normal' | 'important' | 'urgent' }) => Promise<MutationResult>
+  createIncident: (input: { title: string; location: string; severity: 'low' | 'medium' | 'high' }) => Promise<MutationResult>
   resetDemo: () => void
 }
 
@@ -62,19 +65,27 @@ async function loadSupabaseData(userId: string, email: string): Promise<AppData>
   }
 
   const classroomId = classroom?.id
-  const [{ data: standingRows }, { data: statRows }, { data: matchRows }, { data: inviteRows }] = await Promise.all([
+  const [{ data: standingRows }, { data: statRows }, { data: matchRows }, { data: inviteRows }, { data: bracketRows }, { data: taskRows }, { data: announcementRows }, { data: incidentRows }] = await Promise.all([
     classroomId ? supabase.from('standings').select('*').eq('classroom_id', classroomId).order('points', { ascending: false }) : Promise.resolve({ data: [] }),
     classroomId ? supabase.from('player_leaderboard').select('*').eq('classroom_id', classroomId) : Promise.resolve({ data: [] }),
     classroomId ? supabase.from('match_overview').select('*').eq('classroom_id', classroomId).order('starts_at') : Promise.resolve({ data: [] }),
     supabase.from('team_invitation_overview').select('*').eq('recipient_id', userId).eq('status', 'pending'),
+    classroomId ? supabase.from('bracket_overview').select('*').eq('classroom_id', classroomId).order('stage_order').order('tie_order') : Promise.resolve({ data: [] }),
+    classroomId ? supabase.from('event_tasks').select('*').eq('classroom_id', classroomId).order('due_time') : Promise.resolve({ data: [] }),
+    classroomId ? supabase.from('announcements').select('*').eq('classroom_id', classroomId).order('created_at', { ascending: false }).limit(8) : Promise.resolve({ data: [] }),
+    classroomId ? supabase.from('event_incidents').select('*').eq('classroom_id', classroomId).order('created_at', { ascending: false }).limit(10) : Promise.resolve({ data: [] }),
   ])
 
   const standings: Standing[] = (standingRows ?? []).map((row) => ({ position: 0, teamId: row.team_id, teamName: row.team_name, shortName: row.short_name, color: row.color, played: row.played, wins: row.wins, draws: row.draws, losses: row.losses, goalsFor: row.goals_for, goalsAgainst: row.goals_against, points: row.points })).map((row, index) => ({ ...row, position: index + 1 }))
   const stats: PlayerStat[] = (statRows ?? []).map((row) => ({ playerId: row.player_id, nickname: row.nickname, teamName: row.team_name, teamColor: row.team_color, goals: row.goals, assists: row.assists, matches: row.matches }))
   const matches: Match[] = (matchRows ?? []).map((row) => ({ id: row.id, sport: row.sport, startsAt: row.starts_at, venue: row.venue, status: row.status, homeTeam: row.home_team, awayTeam: row.away_team, homeColor: row.home_color, awayColor: row.away_color, homeScore: row.home_score, awayScore: row.away_score }))
   const invitations: TeamInvitation[] = (inviteRows ?? []).map((row) => ({ id: row.id, teamName: row.team_name, invitedBy: row.invited_by, createdAt: row.created_at }))
+  const bracket = (bracketRows ?? []).map((row) => ({ id: row.id, stage: row.stage, order: row.tie_order, homeTeam: row.home_team, awayTeam: row.away_team, homeColor: row.home_color, awayColor: row.away_color, firstLegHome: row.first_leg_home, firstLegAway: row.first_leg_away, secondLegHome: row.second_leg_home, secondLegAway: row.second_leg_away, winner: row.winner }))
+  const tasks = (taskRows ?? []).map((row) => ({ id: row.id, title: row.title, category: row.category, dueTime: row.due_time?.slice(0, 5) ?? '', done: row.done }))
+  const announcements = (announcementRows ?? []).map((row) => ({ id: row.id, title: row.title, message: row.message, priority: row.priority, createdAt: row.created_at }))
+  const incidents = (incidentRows ?? []).map((row) => ({ id: row.id, title: row.title, location: row.location, severity: row.severity, status: row.status, createdAt: row.created_at }))
 
-  return { profile, classroom, team, members, standings, stats, matches, invitations }
+  return { profile, classroom, team, members, standings, stats, matches, invitations, bracket, tasks, announcements, incidents }
 }
 
 export function AppDataProvider({ children }: { children: ReactNode }) {
@@ -185,6 +196,28 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
       const { error: updateError } = await supabase!.from('profiles').update({ theme: input.theme, notifications_enabled: input.notificationsEnabled }).eq('id', data.profile.id)
       if (updateError) return { error: updateError.message }
       setData({ ...data, profile }); return { success: 'Preferências salvas.' }
+    },
+    async toggleTask(taskId) {
+      const task = data?.tasks.find((item) => item.id === taskId)
+      if (!task) return { error: 'Tarefa não encontrada.' }
+      if (isDemo) { updateDemo((current) => ({ ...current, tasks: current.tasks.map((item) => item.id === taskId ? { ...item, done: !item.done } : item) })); return { success: 'Checklist atualizado.' } }
+      const { error: updateError } = await supabase!.from('event_tasks').update({ done: !task.done }).eq('id', taskId)
+      if (updateError) return { error: updateError.message }
+      await refresh(); return { success: 'Checklist atualizado.' }
+    },
+    async createAnnouncement(input) {
+      if (!data?.classroom) return { error: 'Sala não encontrada.' }
+      if (isDemo) { updateDemo((current) => ({ ...current, announcements: [{ id: crypto.randomUUID(), ...input, createdAt: new Date().toISOString() }, ...current.announcements] })); return { success: 'Comunicado publicado.' } }
+      const { error: insertError } = await supabase!.from('announcements').insert({ classroom_id: data.classroom.id, author_id: data.profile.id, title: input.title, message: input.message, priority: input.priority })
+      if (insertError) return { error: insertError.message }
+      await refresh(); return { success: 'Comunicado publicado.' }
+    },
+    async createIncident(input) {
+      if (!data?.classroom) return { error: 'Sala não encontrada.' }
+      if (isDemo) { updateDemo((current) => ({ ...current, incidents: [{ id: crypto.randomUUID(), ...input, status: 'open', createdAt: new Date().toISOString() }, ...current.incidents] })); return { success: 'Ocorrência registrada.' } }
+      const { error: insertError } = await supabase!.from('event_incidents').insert({ classroom_id: data.classroom.id, reported_by: data.profile.id, title: input.title, location: input.location, severity: input.severity })
+      if (insertError) return { error: insertError.message }
+      await refresh(); return { success: 'Ocorrência registrada.' }
     },
     resetDemo() { localStorage.removeItem('arena-demo-data'); setData(structuredClone(demoData)) },
   }), [data, error, isDemo, loading, refresh, updateDemo, user])

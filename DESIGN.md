@@ -66,3 +66,16 @@ Validar primeiro o painel principal em desktop e mobile; depois substituir dados
 
 ## Anti-slop self-check
 Clean: hierarquia assimétrica, conteúdo escolar específico, sem hero genérico, sem emojis e sem grade repetitiva de benefícios.
+
+## Extensão — Gestão do evento e mata-mata
+- A marca passa a usar uma reprodução vetorial do brasão enviado, mantendo as faixas, o centro esportivo e as cores verde, amarelo, azul e vermelho.
+- Os ícones animados seguem o vocabulário do vídeo fornecido: órbitas, pontos sequenciais, pulsos e sinais concêntricos dentro de módulos escuros compactos.
+- O chaveamento usa a lógica visual da Libertadores: fase de grupos, oitavas, quartas e semifinais em ida e volta, placar agregado e final única.
+- A home inclui pulso operacional, tarefas da rodada, prévia do mata-mata e mural oficial sem perder a prioridade do placar ao vivo.
+- A Central do Evento reúne checklist, ocupação, quadras, responsáveis, comunicados e ocorrências.
+
+### Decision Trace — extensão
+1. **Chaveamento horizontal por fase** — permite acompanhar o caminho inteiro até a taça como em competições continentais; em telas pequenas exige rolagem horizontal intencional.
+2. **Animações restritas aos indicadores** — traduz o vídeo de ícones sem transformar todo o dashboard em uma superfície inquieta; o movimento fica menos chamativo que o material de referência isolado.
+3. **Logo vetorial redesenhada** — fica nítida em sidebar, PWA e telas retina; não substitui um arquivo oficial fornecido pela escola.
+4. **Central operacional separada** — diferencia tarefas de organização das telas dos atletas; adiciona uma nova área de navegação para representantes.

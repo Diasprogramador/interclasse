@@ -11,6 +11,8 @@ import { RankingPage } from './pages/RankingPage'
 import { SettingsPage } from './pages/SettingsPage'
 import { StatsPage } from './pages/StatsPage'
 import { TeamPage } from './pages/TeamPage'
+import { BracketPage } from './pages/BracketPage'
+import { EventControlPage } from './pages/EventControlPage'
 
 function ProtectedArea() {
   const { user, loading: authLoading } = useAuth()
@@ -30,8 +32,10 @@ export default function App() {
       <Route index element={<DashboardPage />} />
       <Route path="meu-time" element={<TeamPage />} />
       <Route path="classificacao" element={<RankingPage />} />
+      <Route path="chaveamento" element={<BracketPage />} />
       <Route path="estatisticas" element={<StatsPage />} />
       <Route path="jogos" element={<GamesPage />} />
+      <Route path="evento" element={<EventControlPage />} />
       <Route path="configuracoes" element={<SettingsPage />} />
     </Route>
     <Route path="*" element={<Navigate to="/" replace />} />

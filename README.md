@@ -12,7 +12,12 @@ Sistema web instalável (PWA) para gerenciamento de interclasse: salas, times, c
 - Limite de 12 jogadores aplicado no banco de dados
 - Classificação calculada a partir dos resultados
 - Rankings de gols e assistências
+- Fase de grupos e chaveamento eliminatório em padrão Libertadores
 - Agenda e placares
+- Central operacional com checklist, quadras, arbitragem e ocorrências
+- Comunicados oficiais com níveis de prioridade
+- Ícones animados inspirados no material visual fornecido pela escola
+- Brasão escolar vetorial integrado à navegação e ao PWA
 - Tema claro, escuro ou automático
 - Preferência de notificações
 - Instalação como aplicativo PWA e cache da interface
