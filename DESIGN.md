@@ -79,3 +79,46 @@ Clean: hierarquia assimétrica, conteúdo escolar específico, sem hero genéric
 2. **Animações restritas aos indicadores** — traduz o vídeo de ícones sem transformar todo o dashboard em uma superfície inquieta; o movimento fica menos chamativo que o material de referência isolado.
 3. **Logo vetorial redesenhada** — fica nítida em sidebar, PWA e telas retina; não substitui um arquivo oficial fornecido pela escola.
 4. **Central operacional separada** — diferencia tarefas de organização das telas dos atletas; adiciona uma nova área de navegação para representantes.
+
+## Redesign 2026 — International Sports Operations
+
+### Grounding
+Identidade: **Product UI Designer com direção editorial esportiva**. A interface deve parecer uma plataforma oficial de competição escolar, não uma casa de apostas nem um dashboard gamer.
+
+### Visual Foundations v2
+- Direção: **control room + matchday programme** — precisão operacional com momentos de energia esportiva.
+- `--arena-paper #F2F3EE`: fundo principal claro e levemente mineral.
+- `--arena-ink #101C19`: texto e superfícies de alto contraste.
+- `--arena-forest #164E3B`: cor institucional principal.
+- `--arena-signal #DFFF45`: sinal exclusivo para estado ao vivo e ação primária.
+- `--arena-cobalt #3158D4`: dados, links e identificação esportiva.
+- `--arena-coral #F05D4E`: alertas e ocorrências.
+- Tipografia display: `Archivo 700/800`, compacta e atlética, apenas em títulos e placares.
+- Tipografia de interface: `Manrope 400/500/600/700`, mais humana e internacional.
+- Tipografia de dados: `Roboto Mono 500/700`, usada somente em horários, placares e métricas.
+- Raio dominante: 14px em superfícies grandes, 10px em controles, pílula apenas para status.
+- Grid desktop: rail de 88px + conteúdo fluido em 12 colunas; mobile com navegação inferior.
+
+### Structural Description
+1. Rail lateral: brasão, cinco destinos prioritários e perfil; textos aparecem como tooltip, não como coluna larga.
+2. Cabeçalho editorial: fase da competição, data e ação contextual.
+3. Hero operacional: jogo ao vivo ocupa o maior campo visual; placar e tempo são a primeira leitura.
+4. Próximos jogos: timeline horizontal, não tabela genérica.
+5. Performance: classificação e artilharia compartilham uma área tabular calma.
+6. Contexto: comunicados e progresso do time aparecem como rail secundário.
+7. Mobile: placar primeiro, agenda depois, navegação fixa inferior.
+
+### Decision Trace — redesign
+1. **Tema claro como padrão** — aproxima o produto de plataformas esportivas oficiais e melhora uso em quadras iluminadas; perde parte do impacto cinematográfico do tema escuro.
+2. **Rail de ícones em vez de sidebar larga** — libera área para placares e dados; exige tooltips no desktop e rótulos na navegação móvel.
+3. **Uma única superfície heroica** — concentra personalidade no jogo ao vivo e reduz o efeito “grade de cartões”; outras informações ficam deliberadamente mais silenciosas.
+4. **Verde institucional profundo + amarelo-sinal** — preserva a escola sem repetir o verde-limão em toda a interface; o amarelo deve ocupar menos de 8% da tela.
+5. **Dados com Roboto Mono** — melhora alinhamento de placares e horários; deve ser evitada em textos longos.
+6. **Animação somente em estado ao vivo e transições** — comunica mudança real; reduz o espetáculo decorativo dos indicadores antigos.
+
+### Anti-patterns v2
+- Remover títulos condensados em caixa alta usados em excesso.
+- Remover cartões repetidos com borda em todas as seções.
+- Não usar preto esverdeado como fundo universal.
+- Não usar brilho neon, linhas diagonais ou microanimações sem significado.
+- Não replicar estética de betting/cassino.

@@ -32,6 +32,15 @@ Sistema web instalável (PWA) para gerenciamento de interclasse: salas, times, c
 - Vite PWA / Workbox
 - Zod
 - Lucide Icons
+- Figma como fonte de verdade do sistema visual
+
+## Design
+
+Arquivo editável do redesign internacional:
+
+https://www.figma.com/design/YPKn6rTqiDgKlj53Qpvm40
+
+O arquivo contém dashboard desktop, versão mobile e foundations de cor e tipografia. A implementação React usa os mesmos tokens documentados em `DESIGN.md`.
 
 ## Executar localmente
 
